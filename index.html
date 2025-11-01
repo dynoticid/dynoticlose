@@ -15,44 +15,46 @@
 
     html, body {
       width: 100%;
+      height: 100%;
       min-height: 100vh;
+      overflow-x: hidden;
       background: linear-gradient(160deg, #4c1d95 0%, #7e22ce 50%, #a78bfa 100%);
       color: #f5f3ff;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      align-items: center;
       text-align: center;
-      overflow-x: hidden;
     }
 
     main {
-      flex-grow: 1;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 60px 20px 40px;
-      z-index: 2;
+      padding: 0 20px;
       animation: fadeIn 1.2s ease;
     }
 
     h1 {
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-size: clamp(1.8rem, 6vw, 3rem);
       font-weight: 700;
       background: linear-gradient(90deg, #ffffff, #ddd6fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 15px rgba(255,255,255,0.15);
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     p {
-      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
       color: #f3e8ff;
       opacity: 0.95;
       line-height: 1.6;
-      margin-bottom: 25px;
+      margin-bottom: 22px;
       padding: 0 10px;
+      max-width: 90%;
     }
 
     .btn {
@@ -64,7 +66,6 @@
       text-decoration: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
-      display: inline-block;
     }
 
     .btn:hover {
@@ -78,38 +79,17 @@
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      margin-top: 30px;
-      padding-bottom: 0;
+      flex-shrink: 0;
     }
 
     footer img {
-      width: min(90%, 450px);
+      width: min(95%, 480px);
       height: auto;
-      border-radius: 25px 25px 0 0;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+      border-radius: 20px 20px 0 0;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
       object-fit: contain;
       display: block;
-      margin-bottom: -5px;
-    }
-
-    .aura {
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
-      filter: blur(50px);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .aura:nth-child(1) {
-      top: -80px;
-      left: -60px;
-    }
-
-    .aura:nth-child(2) {
-      bottom: -80px;
-      right: -60px;
+      margin-bottom: -3px;
     }
 
     @keyframes fadeIn {
@@ -117,17 +97,19 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-height: 700px) {
-      footer img {
-        width: 80%;
-      }
+    /* Biarkan gambar menempel ke bawah tanpa jarak */
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100svh; /* Gunakan unit viewport aman untuk mobile */
+    }
+
+    main {
+      flex-grow: 1;
     }
   </style>
 </head>
 <body>
-  <div class="aura"></div>
-  <div class="aura"></div>
-
   <main>
     <h1>Dynotic Sedang Dalam Waktu Istirahat</h1>
     <p>Kami akan kembali beroperasi sesuai hari kerja dan jam operasional resmi.<br>
@@ -136,7 +118,7 @@
   </main>
 
   <footer>
-    <img src="https://i.imgur.com/pjsLOFr.png" alt="Dynotic Logo">
+    <img src="https://i.imgur.com/pjsLOFr.png" alt="Dynotic Character">
   </footer>
 
   <audio id="bgMusic" loop>
