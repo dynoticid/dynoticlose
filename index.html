@@ -29,7 +29,7 @@
 
     main {
       z-index: 2;
-      animation: fadeIn 1.8s ease;
+      animation: fadeIn 1.2s ease;
       max-width: 90%;
     }
 
@@ -39,8 +39,9 @@
       background: linear-gradient(90deg, #ffffff, #ddd6fe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 25px rgba(255,255,255,0.15);
+      text-shadow: 0 0 15px rgba(255,255,255,0.15);
       margin-bottom: 14px;
+      will-change: transform, opacity;
     }
 
     p {
@@ -50,6 +51,7 @@
       line-height: 1.6;
       margin-bottom: 25px;
       padding: 0 10px;
+      will-change: transform, opacity;
     }
 
     .btn {
@@ -59,7 +61,7 @@
       padding: 12px 26px;
       border-radius: 12px;
       text-decoration: none;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
       display: inline-block;
       margin-bottom: 40px;
@@ -68,32 +70,38 @@
     .btn:hover {
       background: #ede9fe;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
     }
 
     img {
       width: min(85%, 420px);
       height: auto;
-      opacity: 0.8;
+      opacity: 0;
       border-radius: 20px 20px 0 0;
-      filter: drop-shadow(0 0 15px rgba(255,255,255,0.25));
-      animation: floatImg 5s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
       object-fit: contain;
       margin-bottom: -4px;
+      transition: opacity 1s ease;
+      will-change: opacity;
     }
 
-    @keyframes floatImg {
-      from { transform: translateY(0); }
-      to { transform: translateY(-6px); }
+    img.loaded {
+      opacity: 0.9;
     }
 
     .aura {
       position: absolute;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-      filter: blur(100px);
-      animation: float 10s infinite alternate ease-in-out;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      filter: blur(60px);
       z-index: 0;
     }
 
@@ -105,24 +113,11 @@
     .aura:nth-child(2) {
       bottom: -120px;
       right: -100px;
-      animation-delay: 3s;
-    }
-
-    @keyframes float {
-      from { transform: translate(0, 0); }
-      to { transform: translate(40px, -30px); }
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    footer {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
     }
   </style>
 </head>
@@ -138,7 +133,7 @@
   </main>
 
   <footer>
-    <img src="https://i.imgur.com/wTUzl8o.jpeg" alt="Dynotic Logo">
+    <img src="https://i.imgur.com/pjsLOFr.png" alt="Dynotic Logo" loading="lazy">
   </footer>
 
   <audio id="bgMusic" loop>
@@ -151,6 +146,11 @@
     document.addEventListener('click', () => {
       audio.play().catch(() => {});
     }, { once: true });
+
+    const img = document.querySelector('img');
+    img.addEventListener('load', () => {
+      img.classList.add('loaded');
+    });
   </script>
 </body>
 </html>
