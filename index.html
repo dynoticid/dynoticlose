@@ -18,7 +18,7 @@
       height: 100%;
       min-height: 100vh;
       overflow-x: hidden;
-      overflow-y: auto; /* biar bisa discroll */
+      overflow-y: auto;
       -webkit-overflow-scrolling: touch;
       color: #f5f3ff;
       display: flex;
@@ -27,9 +27,11 @@
       align-items: center;
       text-align: center;
       position: relative;
+
+      /* 🚫 Disable native pull-to-refresh */
+      overscroll-behavior-y: contain;
     }
 
-    /* 🌈 Aurora background */
     body::before {
       content: "";
       position: fixed;
@@ -121,7 +123,6 @@
       animation: floatLeftRight 6s ease-in-out infinite;
     }
 
-    /* ✨ Animasi */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -138,7 +139,6 @@
       100% { transform: translateX(0); }
     }
 
-    /* indikator lingkaran refresh */
     #refreshIndicator {
       position: fixed;
       top: 10px;
@@ -164,7 +164,6 @@
     @media (max-width: 600px) {
       main { padding: 35px 15px; }
       h1 { font-size: 1.8rem; }
-      h2 { font-size: 1.2rem; }
       p { font-size: 0.95rem; }
     }
   </style>
@@ -189,13 +188,11 @@
   </audio>
 
   <script>
-    // Musik tetap seperti semula
     const audio = document.getElementById('bgMusic');
     document.addEventListener('click', () => {
       audio.play().catch(() => {});
     }, { once: true });
 
-    // Efek tarik untuk refresh
     let startY = 0;
     let isPulled = false;
     const indicator = document.getElementById('refreshIndicator');
@@ -215,8 +212,9 @@
       if (distance > 0 && window.scrollY === 0) {
         indicator.style.opacity = '1';
         indicator.style.top = `${Math.min(60, distance / 2)}px`;
+        e.preventDefault(); // hentikan scroll native
       }
-    });
+    }, { passive: false });
 
     window.addEventListener('touchend', (e) => {
       if (!isPulled) return;
@@ -227,12 +225,10 @@
       isPulled = false;
 
       if (distance > 100) {
-        // kalau ditarik cukup jauh, refresh halaman
         setTimeout(() => {
           location.reload();
         }, 300);
       } else {
-        // kalau ditarik kurang, hilangkan indikator
         indicator.style.opacity = '0';
       }
     });
