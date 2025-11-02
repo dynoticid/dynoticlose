@@ -17,7 +17,9 @@
       width: 100%;
       height: 100%;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto; /* biar bisa discroll */
+      -webkit-overflow-scrolling: touch;
       color: #f5f3ff;
       display: flex;
       flex-direction: column;
@@ -30,7 +32,7 @@
     /* 🌈 Aurora background */
     body::before {
       content: "";
-      position: absolute;
+      position: fixed;
       inset: 0;
       background: linear-gradient(160deg, #4c1d95, #7e22ce, #a78bfa);
       background-size: 400% 400%;
@@ -69,7 +71,6 @@
     p {
       font-size: clamp(0.95rem, 3.5vw, 1.1rem);
       color: #f3e8ff;
-      opacity: 0.95;
       line-height: 1.6;
       margin-bottom: 22px;
       max-width: 90%;
@@ -104,6 +105,7 @@
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
+      margin-top: 20px;
     }
 
     footer img {
@@ -136,18 +138,40 @@
       100% { transform: translateX(0); }
     }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      height: 100svh;
+    /* indikator lingkaran refresh */
+    #refreshIndicator {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      opacity: 0;
+      transition: opacity 0.3s ease, top 0.3s ease;
+      pointer-events: none;
+      z-index: 9999;
     }
 
-    main {
-      flex-grow: 1;
+    @keyframes spin {
+      0% { transform: translateX(-50%) rotate(0deg); }
+      100% { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 35px 15px; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.2rem; }
+      p { font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
+  <div id="refreshIndicator"></div>
+
   <main>
     <h1>Dynotic Sedang Dalam Waktu Istirahat</h1>
     <p>Kami akan kembali beroperasi sesuai hari kerja dan jam operasional resmi.<br>
@@ -165,10 +189,57 @@
   </audio>
 
   <script>
+    // Musik tetap seperti semula
     const audio = document.getElementById('bgMusic');
     document.addEventListener('click', () => {
       audio.play().catch(() => {});
     }, { once: true });
+
+    // Efek tarik untuk refresh
+    let startY = 0;
+    let isPulled = false;
+    const indicator = document.getElementById('refreshIndicator');
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0) {
+        startY = e.touches[0].clientY;
+        isPulled = true;
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulled) return;
+      const currentY = e.touches[0].clientY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        indicator.style.opacity = '1';
+        indicator.style.top = `${Math.min(60, distance / 2)}px`;
+      }
+    });
+
+    window.addEventListener('touchend', (e) => {
+      if (!isPulled) return;
+      const endY = e.changedTouches[0].clientY;
+      const distance = endY - startY;
+
+      indicator.style.top = '10px';
+      isPulled = false;
+
+      if (distance > 100) {
+        // kalau ditarik cukup jauh, refresh halaman
+        setTimeout(() => {
+          location.reload();
+        }, 300);
+      } else {
+        // kalau ditarik kurang, hilangkan indikator
+        indicator.style.opacity = '0';
+      }
+    });
+
+    window.addEventListener('load', () => {
+      indicator.style.opacity = '0';
+    });
   </script>
 </body>
 </html>
